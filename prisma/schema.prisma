@@ -5,8 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"   
 }
 
 datasource db {
@@ -17,5 +16,23 @@ model User {
   id        String    @id     @default(uuid())
   email     String    @unique
   password  String
+
+  roleId    String
+  role      Role      @relation(fields: [roleId], references: [id])
+
   createAt  DateTime  @default(now())
 }
+
+enum RoleName {
+  ADMIN
+  USER
+  GUEST
+}
+
+model Role {
+  id        String    @id   @default(uuid())
+  name      RoleName  @unique
+  user      User[]
+}
+
+
